@@ -4,6 +4,7 @@
 
 int randomMatrix();
 void showSolution(int matrix[10][4][4],int index);
+int isIndexRepeated(int matrixArray[10], int index);
 
 int main() {
     srand(getpid());
@@ -67,7 +68,7 @@ int main() {
             {10, 14, 9, 5}
         },
     };
-    int matrixUsed[10]={-1};
+    int usedIndex[10]={-1};
     char answer[3];
     int matchesPlayed = 0;
     int processedAnswer = 0;
@@ -90,6 +91,14 @@ int main() {
 
         // while(seguirJugando == "si" && resolvido == 0){
         int matrixIndex = randomMatrix();
+        printf("matrix index %d \n", matrixIndex);
+        printf("is repeated %d \n", isIndexRepeated(usedIndex, matrixIndex));
+        while(isIndexRepeated(usedIndex, matrixIndex) == 1){
+            matrixIndex = randomMatrix();
+        }
+        usedIndex[matchesPlayed] = matrixIndex;
+        
+        
         printf("--- Se jugo la partida numero %d, con la Matriz %d ---\n", matchesPlayed, matrixIndex);  
         showSolution(matrixSolutions, matrixIndex);
         matchesPlayed++;
@@ -108,7 +117,7 @@ int randomMatrix(){
     return (rand() % 10);
 }
 
-void showSolution(int matrix[10][4][4] ,int index){
+void showSolution(int matrix[10][4][4], int index){
     int f,c;
     for (f = 0; f < 4; f++) {
         for (c = 0; c < 4 ; c++) {
@@ -117,4 +126,13 @@ void showSolution(int matrix[10][4][4] ,int index){
         printf("\n");
     }
     
+}
+
+int isIndexRepeated(int matrixArray[10], int index){
+    for (int i = 0; i < 10; i++) {
+      if (matrixArray[i] == index) {
+        return 1;
+      }
+    }
+    return 0;
 }
