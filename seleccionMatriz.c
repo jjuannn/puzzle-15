@@ -3,8 +3,9 @@
 #include <stdlib.h>
 
 int randomMatrix();
-void showSolution(int matrix[10][4][4],int index);
 int isIndexRepeated(int matrixArray[10], int index);
+void showSolution(int matrix[4][4]);
+void loadTable(int table[4][4], int matrix[10][4][4], int index);
 
 int main() {
     srand(getpid());
@@ -72,6 +73,7 @@ int main() {
     char answer[3];
     int matchesPlayed = 0;
     int processedAnswer = 0;
+    int table[4][4];
     //char seguirJugando[2] = "si";
     //int apuesta = 0;
     //int resolvido = 0;
@@ -92,9 +94,10 @@ int main() {
         }
 
         usedIndex[matchesPlayed] = matrixIndex;
+        loadTable(table, matrixSolutions, matrixIndex);
         
         printf("--- Se jugo la partida numero %d, con la Matriz %d ---\n", matchesPlayed, matrixIndex);  
-        showSolution(matrixSolutions, matrixIndex);
+        showSolution(table);
         matchesPlayed++;
         // }
         
@@ -116,15 +119,14 @@ int randomMatrix(){
     return (rand() % 10);
 }
 
-void showSolution(int matrix[10][4][4], int index){
+void showSolution(int matrix[4][4]){
     int f,c;
     for (f = 0; f < 4; f++) {
         for (c = 0; c < 4 ; c++) {
-            printf("%i,", matrix[index][f][c]);
+            printf("%i,", matrix[f][c]);
         }
         printf("\n");
     }
-    
 }
 
 int isIndexRepeated(int matrixArray[10], int index){
@@ -134,4 +136,13 @@ int isIndexRepeated(int matrixArray[10], int index){
       }
     }
     return 0;
+}
+
+void loadTable(int table[4][4], int matrix[10][4][4], int index) {
+    int f,c;
+    for (f = 0; f < 4; f++) {
+        for (c = 0; c < 4 ; c++) {
+            table[f][c] = matrix[index][f][c];
+        }
+    }
 }
