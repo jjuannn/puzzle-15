@@ -68,7 +68,7 @@ int main() {
             {10, 14, 9, 5}
         },
     };
-    int usedIndex[10]={-1};
+    int usedIndex[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
     char answer[3];
     int matchesPlayed = 0;
     int processedAnswer = 0;
@@ -77,32 +77,31 @@ int main() {
     //int resolvido = 0;
     //int historialPuntos[] = {0};
 
-    /*scanf("%s", answer);
-
-    int rta = strcmp(answer, "si");
-
-    if (rta == 0) {
-        printf("answer es igual  SI");
-    } else {
-        printf("answer NO es igual  SI");
-    }*/
+    for(int i=0; i<10; i++){
+        printf("%i,", usedIndex[i]);
+    }
+    printf("\n");
 
     while((processedAnswer == 0) && (matchesPlayed != 10)) {
 
         // while(seguirJugando == "si" && resolvido == 0){
-        int matrixIndex = randomMatrix();
-        printf("matrix index %d \n", matrixIndex);
-        printf("is repeated %d \n", isIndexRepeated(usedIndex, matrixIndex));
+        int matrixIndex = 0;
         while(isIndexRepeated(usedIndex, matrixIndex) == 1){
+            printf("La matriz se repitio(matrixIndex), buscamos otra...\n");
             matrixIndex = randomMatrix();
         }
+
         usedIndex[matchesPlayed] = matrixIndex;
-        
         
         printf("--- Se jugo la partida numero %d, con la Matriz %d ---\n", matchesPlayed, matrixIndex);  
         showSolution(matrixSolutions, matrixIndex);
         matchesPlayed++;
         // }
+        
+        for(int i=0; i<10; i++){
+            printf("%i,", usedIndex[i]);
+        }
+        printf("\n");
 
         printf("Desea jugar otra partida? (si-no)\n> ");
         //validarRespuesta(respuesta)  -----> esta funcion serviria para validar que el usuario ingrese 'is' o 'no' y no cualquier cosa
