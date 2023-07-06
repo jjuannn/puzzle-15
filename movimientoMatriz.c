@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <conio.h>
+#include <ctype.h>
 
 void showMatrix(int matrix[4][4]);
 void findEmptySpace(int M[4][4],int *f, int *c);
@@ -8,7 +10,6 @@ int main() {
 
     int fila = -1;
     int col = -1;
-    char tecla = 'a';
 
     int M[4][4] = { 
         {6, 0 ,12, 14}, 
@@ -24,13 +25,17 @@ int main() {
     printf("\n");
     findEmptySpace(M, &fila, &col);
     printf("El 0 esta en M[%d][%d]\n", fila, col);
+
+    printf("Press any key...\n");
+    int tecla = getch();
+
     printf("Se presiono la tecla %c\n", tecla);
     checkMovements(M, fila, col, tecla);
     return 0;
 }
 
 void checkMovements(int M[4][4],int f, int c, char tecla){  
-        switch(tecla) {
+        switch(tolower(tecla)) {
             case 'w': {
                 if((f-1) >= 0){
                     printf("Arriba del cero esta el M[%i][%i] = %i\n", f,c, M[(f-1)][c]);
