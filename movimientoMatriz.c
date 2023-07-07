@@ -1,15 +1,22 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <conio.h>
 #include <ctype.h>
 
 void showMatrix(int matrix[4][4]);
 void findEmptySpace(int M[4][4],int *f, int *c);
 void checkMovements(int M[4][4],int f, int c, char tecla);
+int isResolved(int table[4][4],int solution[4][4]);
+int getPoints(int moves, int bet);
 
 int main() {
 
     int fila = -1;
     int col = -1;
+    char tecla = 'e';
+    int moves = 0;
+    int apuesta = 0;
+    int score = 0;
 
     int solution[4][4] = {
         {1,2,3,4},
@@ -19,47 +26,73 @@ int main() {
     };
 
     int M[4][4] = { 
-        {6, 0 ,12, 14}, 
-        {9, 1, 13, 8}, 
-        {15, 10, 4, 2}, 
-        {11, 5, 7, 3}
+        {1,2,3,4},
+        {5,6,7,8},
+        {9,10,11,12},
+        {13,14,0,15}
     };
 
-   /*
-    {6 , 0 , 12 , 14 }, 
-    {9 , 1 , 13 , 8  }, 
-    {15, 10, 4  , 2  }, 
-    {11, 5 , 7  , 3  }
-
-    s -> M[f+1][c]
-    w -> M[f-1][c]
-    d -> M[f][c+1]
-    a -> M[f][c-1]
-   */
-
-    showMatrix(M);
-    // printf("fila = %i, col = %i\n", fila, col);
-    
-    // cambiar esto para que no se ejecute siempre
-    while(1){
-    printf("\n");
-    findEmptySpace(M, &fila, &col);
-    // printf("El 0 esta en M[%d][%d]\n", fila, col);
-
-    // printf("Press any key...\n");
-    int tecla = getch();
-
-    printf("Se presiono la tecla %c\n", tecla);
-    checkMovements(M, fila, col, tecla);
-
-    showMatrix(M);
-    printf("\n \n ");
+    printf("Ingrese su apuesta:\n> ");
+    scanf("%i", &apuesta);
+    while(apuesta < 1){
+        printf("La apuesta debe ser mayor a 0\n> ");
+        scanf("%i", &apuesta);
     }
+    showMatrix(M);
+    printf("\n");
+
+    while(!(isResolved(M, solution)) && tecla != 'q'){
+        findEmptySpace(M, &fila, &col);
+        tecla = tolower(getch());
+        if (tecla == 'a' || tecla == 's'|| tecla == 'w' || tecla == 'd') {
+            moves++;
+        }
+        checkMovements(M, fila, col, tecla);
+        printf("\n\n");
+        showMatrix(M);
+        //system("cls");
+    }
+    
+    score = getPoints(moves, apuesta);
+
+    if(tecla != 'q'){
+        printf("Ganaste!!!\n");
+        printf("Movimientos Realizados: %i\n", moves);
+        printf("Puntos Obtenidos: %i\n", score);
+    } else {
+       printf("Movimientos Realizados: %i\n", moves);
+       printf("Puntos Obtenidos: 0, sos horrible loco.\n");
+    }
+
     return 0;
 }
 
+int getPoints(int moves, int apuesta){
+    if (moves > (apuesta-10) &&  moves < apuesta){
+        return 500;
+    } else if(moves > apuesta && moves <= (apuesta + 10)){
+        return 100;
+    } else if (moves == apuesta){
+        return 1000;
+    } else{
+        return 0;
+    }
+}
+
+int isResolved(int M[4][4],int solution[4][4]){
+    int f,c;
+    for (f = 0; f < 4; f++) {
+        for (c = 0; c < 4 ; c++) {
+            if(M[f][c] != solution[f][c]){//Si encuentra un elemento distinto
+                return 0;//no esta resuelta
+            }
+        }
+    }
+    return 1; //esta resuelta
+}
+
 void checkMovements(int M[4][4],int f, int c, char tecla){  
-        switch(tolower(tecla)) {
+        switch(tecla) {
             case 's': {
                 if((f-1) >= 0 && (f-1) < 4){
                     int aux = M[(f-1)][c];
@@ -124,12 +157,16 @@ void findEmptySpace(int M[4][4], int *f, int *c) {
 
 void showMatrix(int matrix[4][4]){
     int f,c;
+    printf("[");
     for (f = 0; f < 4; f++) {
         for (c = 0; c < 4 ; c++) {
             if(matrix[f][c] == 0){
                 printf("%c,", ' ');  
             } else {
                 printf("%i,", matrix[f][c]);  
+            }
+            if(f==3 && c==3){
+                printf("]");
             }
         }
         printf("\n");
