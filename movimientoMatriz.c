@@ -103,7 +103,8 @@ void checkMovements(int M[4][4],int f, int c, char tecla){
                 }
             };
                 break;
-            //default:;
+            default:
+                printf("Tecla no valida - Presionar solo W, S, A o D\n");
         }
 }
 
