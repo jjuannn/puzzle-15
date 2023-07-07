@@ -3,9 +3,12 @@
 #include <conio.h>
 #include <ctype.h>
 
+#define SEPARATOR() printf("\n");
+
 void showMatrix(int matrix[4][4]);
 void findEmptySpace(int M[4][4],int *f, int *c);
 void checkMovements(int M[4][4],int f, int c, char tecla);
+void keysScreen();
 int isResolved(int table[4][4],int solution[4][4]);
 int getPoints(int moves, int bet);
 
@@ -38,33 +41,49 @@ int main() {
         printf("La apuesta debe ser mayor a 0\n> ");
         scanf("%i", &apuesta);
     }
+    system("cls");
     showMatrix(M);
-    printf("\n");
+    SEPARATOR();
+    keysScreen();
+    SEPARATOR();
 
     while(!(isResolved(M, solution)) && tecla != 'q'){
         findEmptySpace(M, &fila, &col);
+        printf("Ingrese Movimiento\n> ");
         tecla = tolower(getch());
+        system("cls");
         if (tecla == 'a' || tecla == 's'|| tecla == 'w' || tecla == 'd') {
             moves++;
         }
         checkMovements(M, fila, col, tecla);
-        printf("\n\n");
         showMatrix(M);
-        //system("cls");
+        SEPARATOR();
+        keysScreen();
+        SEPARATOR();
     }
-    
+    system("cls");
+
     score = getPoints(moves, apuesta);
 
     if(tecla != 'q'){
-        printf("Ganaste!!!\n");
+        printf("Resolviste el Puzzle!!!\n");
         printf("Movimientos Realizados: %i\n", moves);
         printf("Puntos Obtenidos: %i\n", score);
     } else {
+       printf("Abandonaste...\n");
        printf("Movimientos Realizados: %i\n", moves);
        printf("Puntos Obtenidos: 0, sos horrible loco.\n");
     }
 
     return 0;
+}
+
+void keysScreen(){
+    printf("W - Arriba\n");
+    printf("S - Abajo\n");
+    printf("A - Izquierda\n");
+    printf("D - Derecha\n");
+    printf("Q - Salir\n");
 }
 
 int getPoints(int moves, int apuesta){
@@ -98,10 +117,10 @@ void checkMovements(int M[4][4],int f, int c, char tecla){
                     int aux = M[(f-1)][c];
                     M[(f-1)][c] = M[f][c];
                     M[f][c] = aux;
-                    printf("Arriba del cero esta el M[%i][%i] = %i\n", f - 1,c, M[(f-1)][c]);
+                    //printf("Arriba del cero esta el M[%i][%i] = %i\n", f - 1,c, M[(f-1)][c]);
 
                 } else {
-                    printf("No se puede mover hacia arriba amigo \n");
+                    printf("No se puede mover hacia arriba amigo ");
                 }
             };
                 break;
@@ -110,9 +129,9 @@ void checkMovements(int M[4][4],int f, int c, char tecla){
                     int aux = M[(f+1)][c];
                     M[(f+1)][c] = M[f][c];
                     M[f][c] = aux;
-                    printf("Abajo del cero esta el M[%i][%i] = %i\n", f + 1,c, M[(f+1)][c]);
+                    //printf("Abajo del cero esta el M[%i][%i] = %i\n", f + 1,c, M[(f+1)][c]);
                 } else {
-                    printf("No se puede mover hacia abajo amigo \n");
+                    printf("No se puede mover hacia abajo amigo ");
                 }
             };
                 break;
@@ -121,9 +140,9 @@ void checkMovements(int M[4][4],int f, int c, char tecla){
                     int aux = M[f][(c + 1)];
                     M[f][(c + 1)] = M[f][c];
                     M[f][c] = aux;
-                    printf("A la izquierda del cero esta el M[%i][%i] = %i\n", f,c - 1, M[f][(c-1)]);
+                    //printf("A la izquierda del cero esta el M[%i][%i] = %i\n", f,c - 1, M[f][(c-1)]);
                 } else {
-                    printf("No se puede mover hacia la izquierda amigo \n");
+                    printf("No se puede mover hacia la izquierda amigo ");
                 }
             };
                 break;
@@ -132,14 +151,14 @@ void checkMovements(int M[4][4],int f, int c, char tecla){
                     int aux = M[f][(c - 1)];
                     M[f][(c - 1)] = M[f][c];
                     M[f][c] = aux;
-                    printf("A la derecha del cero esta el M[%i][%i] = %i\n", f, c + 1, M[f][(c+1)]);
+                    //printf("A la derecha del cero esta el M[%i][%i] = %i\n", f, c + 1, M[f][(c+1)]);
                 } else {
-                    printf("No se puede mover hacia la derecha amigo \n");
+                    printf("No se puede mover hacia la derecha amigo ");
                 }
             };
                 break;
             default:
-                printf("Tecla no valida - Presionar solo W, S, A o D\n");
+                printf("Tecla no valida");
         }
 }
 
