@@ -39,6 +39,8 @@ int main() {
 
     showMatrix(M);
     // printf("fila = %i, col = %i\n", fila, col);
+    
+    // cambiar esto para que no se ejecute siempre
     while(1){
     printf("\n");
     findEmptySpace(M, &fila, &col);
