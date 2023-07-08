@@ -21,16 +21,16 @@ srand(getpid());
 //Constantes 
 int matrixSolutions[10][4][4] = {
         {
-            {6, 0 ,12, 14}, 
-            {9, 1, 13, 8}, 
-            {15, 10, 4, 2}, 
-            {11, 5, 7, 3}
+            {1,2,3,0},
+            {5,6,7,4},
+            {9,10,11,8},
+            {13,14,15,12}
         },
         {
-            {10, 4, 3, 2}, 
-            {6, 8, 1, 7}, 
-            {11, 5, 9, 15}, 
-            {12, 0, 13, 14}
+            {1,2,3,4},
+            {5,6,7,8},
+            {9,10,11,12},
+            {0,13,14,15}
         },
         {
             {14, 7, 9, 13}, 
@@ -104,11 +104,12 @@ int solution[4][4] = {
 while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del historial
     matchesPlayed++;
     //Seleccion de matriz NO REPETIDA
-    int matrixIndex = randomMatrix();
-    while(isIndexRepeated(usedIndex, matrixIndex) == 1){
-        printf("La matriz se repitio(matrixIndex), buscamos otra...\n");
-        matrixIndex = randomMatrix();
-    }
+    int matrixIndex = 0;
+    //int matrixIndex = randomMatrix();
+    // while(isIndexRepeated(usedIndex, matrixIndex) == 1){
+    //     printf("La matriz se repitio(matrixIndex), buscamos otra...\n");
+    //     matrixIndex = randomMatrix();
+    // }
 
     loadTable(table, matrixSolutions, matrixIndex);
 
@@ -117,7 +118,7 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
     tecla = 'x';
     printf("Ingrese su apuesta:\n> ");
     scanf("%i", &bet);
-    while(bet <= 40 || bet > 200 ){
+    while(bet < 40 || bet > 200 ){
         printf("La apuesta debe ser mayor a 0\n> ");
         scanf("%i", &bet);
     }
@@ -295,13 +296,15 @@ int isResolved(int M[4][4],int solution[4][4]){
 
 
 int getPoints(int moves, int apuesta){
-    if (moves > (apuesta-10) &&  moves < apuesta){
+    if (moves >= (apuesta-10) &&  moves < apuesta){ // [M-10,M)
+        return 1200;
+    } else if(moves > apuesta && moves <= (apuesta + 10)){  // (M,M+10]
         return 500;
-    } else if(moves > apuesta && moves <= (apuesta + 10)){
-        return 100;
-    } else if (moves == apuesta){
+    } else if (moves == apuesta){ //M
         return 1000;
-    } else{
+    } else if (moves < (apuesta - 10)){     // M-10
+        return 1500;
+    } else {
         return 0;
     }
 }
