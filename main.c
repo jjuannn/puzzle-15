@@ -98,6 +98,7 @@ int solution[4][4] = {
     {9,10,11,12},
     {13,14,15,0}
 };
+int scoreHistory[10];
 
 //Control entre partidas
 
@@ -118,7 +119,7 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
     tecla = 'x';
     printf("Ingrese su apuesta:\n> ");
     scanf("%i", &bet);
-    while(bet < 40 || bet > 200 ){
+    while(bet < 1 || bet > 50 ){
         printf("La apuesta debe ser mayor a 0\n> ");
         scanf("%i", &bet);
     }
@@ -149,6 +150,7 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
     system("cls");
 
     score = getPoints(moves, bet);
+    scoreHistory[(matchesPlayed - 1)] = score;
 
     if(tecla != 'q'){
         printf("Resolviste el Puzzle!!!\n");
@@ -173,6 +175,9 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
 }
 
 //Muestro Historial
+for (int i = 0; i < matchesPlayed; i++){
+    printf("Partida %i: %i Puntos\n", (i+1),scoreHistory[i]);
+}
 
 
     return 0;
