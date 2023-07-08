@@ -14,7 +14,7 @@ void findEmptySpace(int M[4][4],int *f, int *c);
 void checkMovements(int M[4][4],int f, int c, char tecla);
 void keysScreen();
 void loadTable(int table[4][4], int matrix[10][4][4], int index);
-
+void showHistory(int history[10][3],int limit);
 
 int main () {
 srand(getpid());
@@ -91,6 +91,7 @@ int matrixIndex = 0;
 int matchesPlayed = 0;
 int bet = 0;
 int table[4][4];
+int history[10][3];
 int usedIndex[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 int solution[4][4] = {
     {1,2,3,4},
@@ -150,35 +151,42 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
     system("cls");
 
     score = getPoints(moves, bet);
-    scoreHistory[(matchesPlayed - 1)] = score;
+    //scoreHistory[(matchesPlayed - 1)] = score;
+    history[(matchesPlayed - 1)][0] = score;
+    history[(matchesPlayed - 1)][1] = moves;
+    history[(matchesPlayed - 1)][2] = bet;
 
     if(tecla != 'q'){
+        printf("=================================\n");
         printf("Resolviste el Puzzle!!!\n");
-        printf("Movimientos Realizados: %i\n", moves);
-        printf("Puntos Obtenidos: %i\n", score);
+        printf("=================================\n");
     } else {
+       printf("=================================\n");
        printf("Abandonaste...\n");
-       printf("Movimientos Realizados: %i\n", moves);
-       printf("Puntos Obtenidos: 0, sos horrible loco.\n");
+       printf("=================================\n");
     }
+
+    showHistory(history, matchesPlayed);
 
     //sumo a historial
 
 
     //pregunto si quiere jugar otra ronda
-    printf("Quiere jugar otra ronda?\n>");
-    scanf("%c", &answer);
+    printf("Quiere jugar otra ronda?\n> ");
+    scanf(" %c", &answer);
     while(answer != 's' && answer != 'n'){
-        printf("Solo se acepta s-SI | n-NO\n>");
-        scanf("%c", &answer);
+        printf("Solo se acepta s-SI | n-NO\n> ");
+        scanf(" %c", &answer);
     }
+    system("cls");
 }
 
 //Muestro Historial
-for (int i = 0; i < matchesPlayed; i++){
-    printf("Partida %i: %i Puntos\n", (i+1),scoreHistory[i]);
-}
+// for (int i = 0; i < matchesPlayed; i++){
+//     printf("Partida %i: %i Puntos\n", (i+1),scoreHistory[i]);
+// }
 
+    showHistory(history, matchesPlayed);
 
     return 0;
 }
@@ -275,8 +283,9 @@ void checkMovements(int M[4][4],int f, int c, char tecla){
             };
                 break;
             default:
-                printf("Tecla no valida");
+                printf("Tecla no valida\n");
         }
+        SEPARATOR();
 }
 
 void keysScreen(){
@@ -321,4 +330,12 @@ void loadTable(int table[4][4], int matrix[10][4][4], int index) {
             table[f][c] = matrix[index][f][c];
         }
     }
+}
+
+void showHistory(int history[10][3], int limit) {
+    int f,c;
+    for(f = 0; f < limit; f++){
+        printf("Partida %i: Puntos = %i | Movimientos = %i | Apuesta = %i\n", (f+1), history[f][0], history[f][1], history[f][2]);
+    }
+    SEPARATOR();
 }
