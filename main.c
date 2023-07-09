@@ -154,19 +154,18 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
     system("cls");
 
     score = getPoints(moves, bet);
-    //scoreHistory[(matchesPlayed - 1)] = score;
     history[(matchesPlayed - 1)][0] = score;
     history[(matchesPlayed - 1)][1] = moves;
     history[(matchesPlayed - 1)][2] = bet;
 
     if(tecla != 'q'){
-        printf("=================================\n");
+            printf("========================================================\n");
         printf("Resolviste el Puzzle!!!\n");
-        printf("=================================\n");
+            printf("========================================================\n");
     } else {
-       printf("=================================\n");
+           printf("========================================================\n");
        printf("Abandonaste...\n");
-       printf("=================================\n");
+           printf("========================================================\n");
     }
 
     showHistory(history, matchesPlayed);
@@ -178,16 +177,12 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
     printf("Quiere jugar otra ronda? [s/n] \n> ");
     scanf(" %c", &answer);
     while(answer != 's' && answer != 'n'){
+        system("cls");
         printf("Solo se acepta s-SI | n-NO\n> ");
         scanf(" %c", &answer);
     }
     system("cls");
 }
-
-//Muestro Historial
-// for (int i = 0; i < matchesPlayed; i++){
-//     printf("Partida %i: %i Puntos\n", (i+1),scoreHistory[i]);
-// }
 
     showHistory(history, matchesPlayed);
 
@@ -336,9 +331,20 @@ void loadTable(int table[4][4], int matrix[10][4][4], int index) {
 }
 
 void showHistory(int history[10][3], int limit) {
-    int f,c;
-    for(f = 0; f < limit; f++){
-        printf("Partida %i: Puntos = %i | Movimientos = %i | Apuesta = %i\n", (f+1), history[f][0], history[f][1], history[f][2]);
+    int i, j;
+    printf("===Partida===|===Puntos====|=Movimientos=|===Apuesta===|\n");
+    for (int i = 0; i < limit; i++) {
+        printf("%7d      |",(i+1));  
+        for (int j = 0; j < 3; j++) {
+            if(history[i][j] > 999){
+                printf("%9d    |", history[i][j]);
+            } else if (history[i][j] > 99){
+                printf("%8d     |", history[i][j]);
+            }  else {
+                printf("%7d      |", history[i][j]);  
+            }
+        }
+        printf("\n");
     }
-    SEPARATOR();
+    printf("========================================================\n");
 }
