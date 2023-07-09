@@ -2,14 +2,17 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <ctype.h>
+
 #define SEPARATOR() printf("\n");
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
 
 //Prototipos
 int randomMatrix();
 int isIndexRepeated(int matrixArray[10], int index);
 int isResolved(int table[4][4],int solution[4][4]);
 int getPoints(int moves, int bet);
-void showMatrix(int matrix[4][4]);
+void displayMatrix(int matrix[][4], int rows, int cols);
 void findEmptySpace(int M[4][4],int *f, int *c);
 void checkMovements(int M[4][4],int f, int c, char tecla);
 void keysScreen();
@@ -126,7 +129,7 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
     }
 
     system("cls");
-    showMatrix(table);
+    displayMatrix(table, 4, 4);
     SEPARATOR();
     keysScreen();
     SEPARATOR();
@@ -141,7 +144,7 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
             moves++;
         }
         checkMovements(table, fila, col, tecla);
-        showMatrix(table);
+        displayMatrix(table, 4, 4);
         SEPARATOR();
         keysScreen();
         SEPARATOR();
@@ -172,7 +175,7 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
 
 
     //pregunto si quiere jugar otra ronda
-    printf("Quiere jugar otra ronda?\n> ");
+    printf("Quiere jugar otra ronda? [s/n] \n> ");
     scanf(" %c", &answer);
     while(answer != 's' && answer != 'n'){
         printf("Solo se acepta s-SI | n-NO\n> ");
@@ -217,22 +220,22 @@ void findEmptySpace(int M[4][4], int *f, int *c) {
     }
 }
 
-void showMatrix(int matrix[4][4]){
-    int f,c;
-    printf("[");
-    for (f = 0; f < 4; f++) {
-        for (c = 0; c < 4 ; c++) {
-            if(matrix[f][c] == 0){
-                printf("%c,", ' ');  
+void displayMatrix(int matrix[][4], int rows, int cols) {
+    printf("========================\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            // printf("%4d |", matrix[i][j]); // Adjust the width as needed for your matrix size
+        
+        if(matrix[i][j] == 0){
+                printf(ANSI_COLOR_RED "%4c " ANSI_COLOR_RESET, 'X' );  
+                printf("|");
             } else {
-                printf("%i,", matrix[f][c]);  
-            }
-            if(f==3 && c==3){
-                printf("]");
+                printf("%4d |", matrix[i][j]);  
             }
         }
         printf("\n");
     }
+    printf("========================\n");
 }
 
 void checkMovements(int M[4][4],int f, int c, char tecla){  
