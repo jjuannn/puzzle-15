@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <ctype.h>
+#include <time.h>
 
 #define SEPARATOR() printf("\n");
 #define ANSI_COLOR_RED     "\x1b[31m"
@@ -17,7 +18,7 @@ void findEmptySpace(int M[4][4],int *f, int *c);
 void checkMovements(int M[4][4],int f, int c, char tecla);
 void keysScreen();
 void loadTable(int table[4][4], int matrix[10][4][4], int index);
-void showHistory(int history[10][3],int limit);
+void showHistory(int history[10][4],int limit);
 
 int main () {
 srand(getpid());
@@ -94,7 +95,7 @@ int matrixIndex = 0;
 int matchesPlayed = 0;
 int bet = 0;
 int table[4][4];
-int history[10][3];
+int history[10][4];
 int usedIndex[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 int solution[4][4] = {
     {1,2,3,4},
@@ -106,7 +107,7 @@ int scoreHistory[10];
 
 //Control entre partidas
 
-while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del historial
+while((answer == 's' || answer == 'S') && matchesPlayed < 3){ //matchesPlayed --> indice del historial
     matchesPlayed++;
     //Seleccion de matriz NO REPETIDA
     int matrixIndex = 0;
@@ -134,6 +135,7 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
     keysScreen();
     SEPARATOR();
 
+    time_t startTime = time(NULL);
     //Control Partida Individual
     while(!(isResolved(table, solution)) && tecla != 'q'){
         findEmptySpace(table, &fila, &col);
@@ -150,22 +152,27 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
         SEPARATOR();
     }
 
+    time_t endTime = time(NULL);
+
+    int timeTaken = endTime - startTime;
+
     //Muestro datos de esta partida
     system("cls");
-
+    printf("Tardaste %is\n", timeTaken);
     score = getPoints(moves, bet);
     history[(matchesPlayed - 1)][0] = score;
     history[(matchesPlayed - 1)][1] = moves;
     history[(matchesPlayed - 1)][2] = bet;
+    history[(matchesPlayed - 1)][3] = timeTaken;
 
     if(tecla != 'q'){
-            printf("========================================================\n");
+        printf("======================================================================\n");
         printf("Resolviste el Puzzle!!!\n");
-            printf("========================================================\n");
+        printf("======================================================================\n");
     } else {
-           printf("========================================================\n");
-       printf("Abandonaste...\n");
-           printf("========================================================\n");
+        printf("======================================================================\n");
+        printf("Abandonaste...\n");
+        printf("======================================================================\n");
     }
 
     showHistory(history, matchesPlayed);
@@ -176,9 +183,9 @@ while(answer == 's' && matchesPlayed < 3){ //matchesPlayed --> indice del histor
     //pregunto si quiere jugar otra ronda
     printf("Quiere jugar otra ronda? [s/n] \n> ");
     scanf(" %c", &answer);
-    while(answer != 's' && answer != 'n'){
+    while(answer != 's' && answer != 'n' && answer != 'S' && answer != 'N'){
         system("cls");
-        printf("Solo se acepta s-SI | n-NO\n> ");
+        printf("Quiere jugar otra ronda? [s/n]\n> ");
         scanf(" %c", &answer);
     }
     system("cls");
@@ -330,12 +337,12 @@ void loadTable(int table[4][4], int matrix[10][4][4], int index) {
     }
 }
 
-void showHistory(int history[10][3], int limit) {
+void showHistory(int history[10][4], int limit) {
     int i, j;
-    printf("===Partida===|===Puntos====|=Movimientos=|===Apuesta===|\n");
+    printf("===Partida===|===Puntos====|=Movimientos=|===Apuesta===|==Tiempo(s)==|\n");
     for (int i = 0; i < limit; i++) {
         printf("%7d      |",(i+1));  
-        for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < 4; j++) {
             if(history[i][j] > 999){
                 printf("%9d    |", history[i][j]);
             } else if (history[i][j] > 99){
@@ -346,5 +353,5 @@ void showHistory(int history[10][3], int limit) {
         }
         printf("\n");
     }
-    printf("========================================================\n");
+    printf("======================================================================\n");
 }
