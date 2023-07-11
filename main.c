@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <ctype.h>
 #include <time.h>
 
@@ -9,15 +8,15 @@
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
 //Prototipos
-int randomMatrix();
+int generateRandomIndex();
 int isIndexRepeated(int matrixArray[10], int index);
-int isResolved(int table[4][4],int solution[4][4]);
-int getPoints(int moves, int bet);
+int isMatrixSolved(int table[4][4],int solution[4][4]);
+int calculateScore(int moves, int bet);
 void displayMatrix(int matrix[][4], int rows, int cols);
 void findEmptySpace(int M[4][4],int *f, int *c);
-void checkMovements(int M[4][4],int f, int c, char tecla);
-void keysScreen();
-void loadTable(int table[4][4], int matrix[10][4][4], int index);
+void checkMovements(int M[4][4],int f, int c, char key);
+void displayControls();
+void fillTable(int table[4][4], int matrix[10][4][4], int index);
 void showHistory(int history[10][4],int limit);
 
 int main () {
@@ -31,10 +30,10 @@ int matrixSolutions[10][4][4] = {
             {13,14,15,12}
         },
         {
-            {1,2,3,4},
-            {5,6,7,8},
-            {9,10,11,12},
-            {0,13,14,15}
+            {15,9,0,7},
+            {5,2,3,8},
+            {6,11,13,10},
+            {14,12,11,4}
         },
         {
             {14, 7, 9, 13}, 
@@ -85,9 +84,9 @@ int matrixSolutions[10][4][4] = {
     };
 
 //Variables Globales   
-char tecla = 'e';
+char key = 'e';
 char answer = 's';
-int fila = -1;
+int row = -1;
 int col = -1;
 int score = 0;
 int moves = 0;
@@ -110,45 +109,46 @@ int scoreHistory[10];
 while((answer == 's' || answer == 'S') && matchesPlayed < 3){ //matchesPlayed --> indice del historial
     matchesPlayed++;
     //Seleccion de matriz NO REPETIDA
-    int matrixIndex = 0;
-    //int matrixIndex = randomMatrix();
-    // while(isIndexRepeated(usedIndex, matrixIndex) == 1){
-    //     printf("La matriz se repitio(matrixIndex), buscamos otra...\n");
-    //     matrixIndex = randomMatrix();
-    // }
+    int matrixIndex = generateRandomIndex();
+    while(isIndexRepeated(usedIndex, matrixIndex) == 1){
+        printf("La matriz se repitio(matrixIndex), buscamos otra...\n");
+        matrixIndex = generateRandomIndex();
+    }
+    usedIndex[(matchesPlayed - 1)] = matrixIndex;
 
-    loadTable(table, matrixSolutions, matrixIndex);
+    fillTable(table, matrixSolutions, matrixIndex);
 
     //Inicializacion de variables a usar en UNA partida
     moves = 0;
-    tecla = 'x';
+    key = 'x';
     printf("Ingrese su apuesta:\n> ");
     scanf("%i", &bet);
     while(bet < 1 || bet > 50 ){
-        printf("La apuesta debe ser mayor a 0\n> ");
+        printf("La apuesta debe ser mayor a 0 y menor a 50 \n>");
         scanf("%i", &bet);
     }
 
     system("cls");
     displayMatrix(table, 4, 4);
     SEPARATOR();
-    keysScreen();
+    displayControls();
     SEPARATOR();
 
     time_t startTime = time(NULL);
     //Control Partida Individual
-    while(!(isResolved(table, solution)) && tecla != 'q'){
-        findEmptySpace(table, &fila, &col);
+    while(!(isMatrixSolved(table, solution)) && key != 'q'){
+        findEmptySpace(table, &row, &col);
         printf("Ingrese Movimiento\n> ");
-        tecla = tolower(getch());
+        scanf(" %c", &key);
+        key = tolower(key);
         system("cls");
-        if (tecla == 'a' || tecla == 's'|| tecla == 'w' || tecla == 'd') {
+        if (key == 'a' || key == 's'|| key == 'w' || key == 'd') {
             moves++;
         }
-        checkMovements(table, fila, col, tecla);
+        checkMovements(table, row, col, key);
         displayMatrix(table, 4, 4);
         SEPARATOR();
-        keysScreen();
+        displayControls();
         SEPARATOR();
     }
 
@@ -159,13 +159,13 @@ while((answer == 's' || answer == 'S') && matchesPlayed < 3){ //matchesPlayed --
     //Muestro datos de esta partida
     system("cls");
     printf("Tardaste %is\n", timeTaken);
-    score = getPoints(moves, bet);
+    score = calculateScore(moves, bet);
     history[(matchesPlayed - 1)][0] = score;
     history[(matchesPlayed - 1)][1] = moves;
     history[(matchesPlayed - 1)][2] = bet;
     history[(matchesPlayed - 1)][3] = timeTaken;
 
-    if(tecla != 'q'){
+    if(key != 'q'){
         printf("======================================================================\n");
         printf("Resolviste el Puzzle!!!\n");
         printf("======================================================================\n");
@@ -173,12 +173,10 @@ while((answer == 's' || answer == 'S') && matchesPlayed < 3){ //matchesPlayed --
         printf("======================================================================\n");
         printf("Abandonaste...\n");
         printf("======================================================================\n");
+        history[(matchesPlayed -1)][0] = 0;
     }
 
     showHistory(history, matchesPlayed);
-
-    //sumo a historial
-
 
     //pregunto si quiere jugar otra ronda
     printf("Quiere jugar otra ronda? [s/n] \n> ");
@@ -197,7 +195,7 @@ while((answer == 's' || answer == 'S') && matchesPlayed < 3){ //matchesPlayed --
 }
 
 //Funciones
-int randomMatrix(){
+int generateRandomIndex(){
     return (rand() % 10);
 }
 
@@ -240,14 +238,13 @@ void displayMatrix(int matrix[][4], int rows, int cols) {
     printf("========================\n");
 }
 
-void checkMovements(int M[4][4],int f, int c, char tecla){  
-        switch(tecla) {
+void checkMovements(int M[4][4],int f, int c, char key){  
+        switch(key) {
             case 's': {
                 if((f-1) >= 0 && (f-1) < 4){
                     int aux = M[(f-1)][c];
                     M[(f-1)][c] = M[f][c];
                     M[f][c] = aux;
-                    //printf("Arriba del cero esta el M[%i][%i] = %i\n", f - 1,c, M[(f-1)][c]);
 
                 } else {
                     printf("No se puede mover hacia arriba amigo\n");
@@ -259,7 +256,6 @@ void checkMovements(int M[4][4],int f, int c, char tecla){
                     int aux = M[(f+1)][c];
                     M[(f+1)][c] = M[f][c];
                     M[f][c] = aux;
-                    //printf("Abajo del cero esta el M[%i][%i] = %i\n", f + 1,c, M[(f+1)][c]);
                 } else {
                     printf("No se puede mover hacia abajo amigo\n");
                 }
@@ -270,7 +266,6 @@ void checkMovements(int M[4][4],int f, int c, char tecla){
                     int aux = M[f][(c + 1)];
                     M[f][(c + 1)] = M[f][c];
                     M[f][c] = aux;
-                    //printf("A la izquierda del cero esta el M[%i][%i] = %i\n", f,c - 1, M[f][(c-1)]);
                 } else {
                     printf("No se puede mover hacia la izquierda amigo\n");
                 }
@@ -281,19 +276,18 @@ void checkMovements(int M[4][4],int f, int c, char tecla){
                     int aux = M[f][(c - 1)];
                     M[f][(c - 1)] = M[f][c];
                     M[f][c] = aux;
-                    //printf("A la derecha del cero esta el M[%i][%i] = %i\n", f, c + 1, M[f][(c+1)]);
                 } else {
                     printf("No se puede mover hacia la derecha amigo\n ");
                 }
             };
                 break;
             default:
-                printf("Tecla no valida\n");
+                printf("key no valida\n");
         }
         SEPARATOR();
 }
 
-void keysScreen(){
+void displayControls(){
     printf("W - Arriba\n");
     printf("S - Abajo\n");
     printf("A - Izquierda\n");
@@ -301,7 +295,7 @@ void keysScreen(){
     printf("Q - Salir\n");
 }
 
-int isResolved(int M[4][4],int solution[4][4]){
+int isMatrixSolved(int M[4][4],int solution[4][4]){
     int f,c;
     for (f = 0; f < 4; f++) {
         for (c = 0; c < 4 ; c++) {
@@ -314,7 +308,7 @@ int isResolved(int M[4][4],int solution[4][4]){
 }
 
 
-int getPoints(int moves, int apuesta){
+int calculateScore(int moves, int apuesta){
     if (moves >= (apuesta-10) &&  moves < apuesta){ // [M-10,M)
         return 1200;
     } else if(moves > apuesta && moves <= (apuesta + 10)){  // (M,M+10]
@@ -328,7 +322,7 @@ int getPoints(int moves, int apuesta){
     }
 }
 
-void loadTable(int table[4][4], int matrix[10][4][4], int index) {
+void fillTable(int table[4][4], int matrix[10][4][4], int index) {
     int f,c;
     for (f = 0; f < 4; f++) {
         for (c = 0; c < 4 ; c++) {
