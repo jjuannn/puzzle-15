@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
+#include <unistd.h>
 
 #define SEPARATOR() printf("\n");
 #define ANSI_COLOR_RED     "\x1b[31m"
@@ -106,12 +107,11 @@ int scoreHistory[10];
 
 //Control entre partidas
 
-while((answer == 's' || answer == 'S') && matchesPlayed < 3){ //matchesPlayed --> indice del historial
+while((answer == 's' || answer == 'S') && matchesPlayed < 10){ //matchesPlayed --> indice del historial
     matchesPlayed++;
     //Seleccion de matriz NO REPETIDA
     int matrixIndex = generateRandomIndex();
     while(isIndexRepeated(usedIndex, matrixIndex) == 1){
-        printf("La matriz se repitio(matrixIndex), buscamos otra...\n");
         matrixIndex = generateRandomIndex();
     }
     usedIndex[(matchesPlayed - 1)] = matrixIndex;
@@ -123,12 +123,13 @@ while((answer == 's' || answer == 'S') && matchesPlayed < 3){ //matchesPlayed --
     key = 'x';
     printf("Ingrese su apuesta:\n> ");
     scanf("%i", &bet);
-    while(bet < 1 || bet > 50 ){
-        printf("La apuesta debe ser mayor a 0 y menor a 50 \n>");
+    while(bet < 40 || bet > 200 ){
+        system("clear");
+        printf("La apuesta debe ser mayor o igual a 39 y menor o igual a 200 \n>");
         scanf("%i", &bet);
     }
 
-    system("cls");
+    system("clear");
     displayMatrix(table, 4, 4);
     SEPARATOR();
     displayControls();
