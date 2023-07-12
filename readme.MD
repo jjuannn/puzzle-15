@@ -1,10 +1,12 @@
 # Trabajo Práctico N°1: Puzzle 15
 
-## Taller De Programación I - Profesor : Diego A. Botallo
+### Taller De Programación I - Profesor Diego A. Botallo
 
-## Alumnos : Juan Avero y Román Alvarez
+### Alumnos
 
-### Objetivo:
+Juan Avero y Román Alvarez
+
+### Objetivo
 
 El juego consiste de una cuadrícula de 16 casillas, rellenada por 15 números enteros del 1 al 15, ordenados aleatoriamente, más una cuadrícula vacía.
 El objetivo es lograr ubicar los números del tablero, de forma que queden ordenados de menor a mayor, con el espacio vacío posicionado en la esquina inferior derecha.
@@ -19,12 +21,12 @@ En este programa se emplean los siguientes conceptos de programación en C:
 - Punteros
 - Bucles
 
-### Estructura del programa:
+### Estructura del programa
 
 El programa está compuesto de un solo archivo llamado main.c, el cual contiene todo el código fuente del juego, incluyendo las funciones necesarias para la ejecución del mismo, y variables y macros que van a ser utilizadas durante el juego.
 El juego tiene un total aproximado de 350 líneas de código.
 
-### Librerías Utilizadas:
+### Librerías Utilizadas
 
 - stdio.h: Utilizada para hacer uso de las funciones de entrada y salida del programa, como printf y scanf
 - stdlib.h: Utilizada para la generación de números aleatorio con srand()
