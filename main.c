@@ -25,10 +25,10 @@ srand(getpid());
 //Constantes 
 int matrixSolutions[10][4][4] = {
         {
-            {1,2,3,0},
-            {5,6,7,4},
-            {9,10,11,8},
-            {13,14,15,12}
+            {12,15,1,4},
+            {3,8,14,7},
+            {2,0,13,10},
+            {6,5,9,11}
         },
         {
             {15,9,0,7},
@@ -125,7 +125,7 @@ while((answer == 's' || answer == 'S') && matchesPlayed < 10){ //matchesPlayed -
     scanf("%i", &bet);
     while(bet < 40 || bet > 200 ){
         system("clear");
-        printf("La apuesta debe ser mayor o igual a 39 y menor o igual a 200 \n>");
+        printf("La apuesta debe ser maor o igual a 40 y menor o igual a 200\n>");
         scanf("%i", &bet);
     }
 
@@ -156,11 +156,10 @@ while((answer == 's' || answer == 'S') && matchesPlayed < 10){ //matchesPlayed -
     time_t endTime = time(NULL);
 
     int timeTaken = endTime - startTime;
+    score = calculateScore(moves, bet);
 
     //Muestro datos de esta partida
     system("cls");
-    printf("Tardaste %is\n", timeTaken);
-    score = calculateScore(moves, bet);
     history[(matchesPlayed - 1)][0] = score;
     history[(matchesPlayed - 1)][1] = moves;
     history[(matchesPlayed - 1)][2] = bet;
@@ -248,7 +247,7 @@ void checkMovements(int M[4][4],int f, int c, char key){
                     M[f][c] = aux;
 
                 } else {
-                    printf("No se puede mover hacia arriba amigo\n");
+                    printf("No se puede mover hacia arriba\n");
                 }
             };
                 break;
@@ -258,7 +257,7 @@ void checkMovements(int M[4][4],int f, int c, char key){
                     M[(f+1)][c] = M[f][c];
                     M[f][c] = aux;
                 } else {
-                    printf("No se puede mover hacia abajo amigo\n");
+                    printf("No se puede mover hacia abajo\n");
                 }
             };
                 break;
@@ -268,7 +267,7 @@ void checkMovements(int M[4][4],int f, int c, char key){
                     M[f][(c + 1)] = M[f][c];
                     M[f][c] = aux;
                 } else {
-                    printf("No se puede mover hacia la izquierda amigo\n");
+                    printf("No se puede mover hacia la izquierda\n");
                 }
             };
                 break;
@@ -278,12 +277,12 @@ void checkMovements(int M[4][4],int f, int c, char key){
                     M[f][(c - 1)] = M[f][c];
                     M[f][c] = aux;
                 } else {
-                    printf("No se puede mover hacia la derecha amigo\n ");
+                    printf("No se puede mover hacia la derecha\n ");
                 }
             };
                 break;
             default:
-                printf("key no valida\n");
+                printf("Movimiento no valida\n");
         }
         SEPARATOR();
 }
